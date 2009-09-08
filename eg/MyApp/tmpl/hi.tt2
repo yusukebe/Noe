@@ -1,0 +1,7 @@
+<html>
+<head>
+<title>Hi, [% name | html %]</title>
+</head>
+<body>
+<h1>Hi, [% name | html %]</h1>
+</body> </html>

@@ -3,8 +3,14 @@ use Mouse;
 with 'Noe::Controller';
 
 sub root {
-    my $req = shift;
+    my ( $self, $req  ) = @_;
     render('index.tt2');
+}
+
+sub hi {
+    my ( $self, $req ) = @_;
+    my $name = $req->param('name') || 'nanashi';
+    render('hi.tt2', { name => $name } );
 }
 
 1;
