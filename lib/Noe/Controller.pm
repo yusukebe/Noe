@@ -5,12 +5,13 @@ use Path::Class;
 
 sub render {
     my ( $tmpl, $args ) = @_;
+    warn Noe::c->base_dir->subdir('tmpl');
     my $config = { INCLUDE_PATH => [ Noe::c->base_dir->subdir('tmpl') ], };
     my $template = Template->new($config);
     my $out;
     $template->process( $tmpl, $args, \$out )
         || die $template->error(), "\n";
-    return [ 200, [ 'Content-Type' => 'text/html' ], [ $out ], ];
+    return [ 200, [ 'Content-Type' => 'text/html' ], [$out] ];
 }
 
 1;
