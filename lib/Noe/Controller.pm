@@ -5,7 +5,6 @@ use Path::Class;
 
 sub render {
     my ( $tmpl, $args ) = @_;
-    warn Noe::c->base_dir->subdir('tmpl');
     my $config = { INCLUDE_PATH => [ Noe::c->base_dir->subdir('tmpl') ], };
     my $template = Template->new($config);
     my $out;
