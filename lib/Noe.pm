@@ -36,7 +36,7 @@ sub psgi_handler {
         local *Noe::c = sub { $self };
         my $app        = $self->app;
         my $dispatcher = "${app}::Dispatcher";
-        $dispatcher->require or die "can't find dispatcher";
+        $dispatcher->require or die "can't find dispatcher : $@";
         my $rule = $dispatcher->match($req);
         my $controller = "${app}::Controller::$rule->{controller}";
         $controller->require;
