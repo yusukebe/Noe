@@ -58,7 +58,7 @@ sub static_handler {
     return [
         200,
         [
-            "Content-Type"   => "image/jpeg",
+            "Content-Type"   => "image/png",
             "X-Sendfile"     => $path,
             "Content-Length" => -s $fh
         ],
