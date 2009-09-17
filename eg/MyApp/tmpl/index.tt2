@@ -1,24 +1,9 @@
-<html>
-<head>
-<title>Hello, Noe!</title>
-<link rel="stylesheet" type="text/css" href="[% base %]css/grids-min.css" />
-</head>
-<body>
-<div id="doc">
-  <div id="hd">
-    <h1>Hello, Noe!</h1>
-  </div>
-  <div id="bd">
-    <h2>GET Request</h2>
-    <form action="/hi">
-    <input type="text" name="name" />
-    <input type="submit">
-    </form>
-    <h2>Serve Staic File</h2>
-    <img src="[% base %]images/yusukebe.png" alt="yusukebe" />
-    <h2>Redirect</h2>
-    <a href="[% base %]redirect">/redirect</a>
-  </div>
-</div>
-</body>
-</html>
+<h2>GET Request</h2>
+<form action="/hi">
+<input type="text" name="name" />
+<input type="submit">
+</form>
+<h2>Serve Staic File</h2>
+<img src="[% base %]images/yusukebe.png" alt="yusukebe" />
+<h2>Redirect</h2>
+<a href="[% base %]redirect">/redirect</a>

@@ -10,6 +10,9 @@ has 'base_dir' => ( is => 'rw', isa => 'Path::Class::Dir', required => 1 );
 sub render {
     my ( $self, $tmpl, $args ) = @_;
     my $config = { INCLUDE_PATH => [ $self->base_dir->subdir('tmpl') ], };
+    if( $tmpl =~ /\.tt2$/ ) { #xxx
+        $config->{WRAPPER} = 'wrapper';
+    }
     my $template = Template->new($config);
     my $out;
     $args->{base} = $self->request->base;

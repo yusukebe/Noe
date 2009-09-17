@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>Hello, Noe!</title>
+<link rel="stylesheet" type="text/css" href="[% base %]css/grids-min.css" />
+</head>
+<body>
+<div id="doc">
+  <div id="hd">
+    <h1>Hello, Noe!</h1>
+  </div>
+  <div id="bd">
+[% content %]
+  </div>
+</div>
+</body>
+</html>

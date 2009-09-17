@@ -1,7 +1,2 @@
-<html>
-<head>
-<title>Hi, [% name | html %]</title>
-</head>
-<body>
-<h1>Hi, [% name | html %]</h1>
-</body> </html>
+<h2>Hi, [% name | html %]</h2>
+<p><a href="[% base %]">Back</a></p>
