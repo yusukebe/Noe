@@ -1,11 +1,15 @@
 <html>
-<head>
-<title>Hello, Noe!</title>
-</head>
-<body>
-<h1>Hello, Noe!</h1>
-<form action="/hi">
-<input type="text" name="name" />
-<input type="submit">
-</form>
-</body> </html>
+  <head>
+    <title>Hello, Noe!</title>
+  </head>
+  <body>
+    <h1>Hello, Noe!</h1>
+    <form action="/hi">
+      <input type="text" name="name" />
+      <input type="submit">
+    </form>
+    <h2>Serve Staic File</h2>
+    <img src="[% base %]images/yusukebe.png" alt="yusukebe" />
+    <h2>Redirect</h2>
+  </body>
+</html>

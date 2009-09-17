@@ -1,6 +1,7 @@
 package Noe;
 use Mouse;
 our $VERSION = '0.01';
+use Noe::Context;
 use Plack::Request;
 use File::Spec;
 use File::Basename;
@@ -44,34 +45,39 @@ sub BUILDARGS {
 sub psgi_handler {
     my $self = shift;
     return sub {
-        local *Noe::c = sub { $self };
-	my $req = Plack::Request->new(shift);
-	my $base = $req->base;
-	# serve static file
-	my $regex = "(?:png|jpg|gif|css|txt)";
-	if( $req->uri =~ /$base(.+\.$regex)/ ){
-	    return $self->handle_static( $1 );
-	}
+        my $req = Plack::Request->new(shift);
+        my $context =
+          Noe::Context->new( request => $req, base_dir => $self->base_dir );
+        my $base = $req->base;
+
+        # serve static file
+        my $regex = "(?:png|jpg|gif|css|txt)";
+        if ( $req->uri =~ /$base(.+\.$regex)/ ) {
+            return $self->handle_static($1);
+        }
+
         my $app        = $self->app;
         my $dispatcher = "${app}::Dispatcher";
         $dispatcher->require or die "can't find dispatcher : $@";
-        my $rule       = $dispatcher->match($req);
-	no warnings;
+        my $rule = $dispatcher->match($req);
+        no warnings;
         my $controller = "${app}::Controller::$rule->{controller}";
-	use warnings;
+        use warnings;
         $controller->require;
         my $method = $rule->{action} or return $self->handle_404;
-        return $controller->$method($req);
-      }
+        return $controller->$method($context);
+    }
 }
 
 sub handle_static {
     my ( $self, $filename ) = @_;
-    my $path = $self->base_dir->file( $self->root, File::Spec::Unix->splitpath( $filename ) );
+    my $path =
+      $self->base_dir->file( $self->root,
+        File::Spec::Unix->splitpath($filename) );
     open my $fh, "<", $path or return $self->handle_404;
     my $content_type = 'text/plain';
-    if( $filename =~ /.*\.(\S{1,})$/xms ){
-	$content_type = $self->mime_types->mimeTypeOf($1)->type;
+    if ( $filename =~ /.*\.(\S{1,})$/xms ) {
+        $content_type = $self->mime_types->mimeTypeOf($1)->type;
     }
     return [
         200,
@@ -86,7 +92,10 @@ sub handle_static {
 
 sub handle_404 {
     my $self = shift;
-    return [404, [ "Content-Type" => "text/plain", "Content-Length" => 13 ], [ "404 not found" ]];
+    return [
+        404, [ "Content-Type" => "text/plain", "Content-Length" => 13 ],
+        ["404 not found"]
+    ];
 }
 
 1;
