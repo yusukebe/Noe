@@ -13,5 +13,10 @@ sub hi {
     $c->render('hi.tt2', { name => $name } );
 }
 
+sub redirect {
+    my ($self, $c ) = @_;
+    $c->redirect( $c->uri_for( '/') );
+}
+
 1;
 
