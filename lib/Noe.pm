@@ -37,21 +37,22 @@ sub psgi_handler {
 	my $base = $req->base;
 	# serve static file
 	if( $req->uri =~ /$base(.+\.png)$/ ){
-	    return $self->static_handler( $1 );
+	    return $self->handle_static( $1 );
 	}
         my $app        = $self->app;
         my $dispatcher = "${app}::Dispatcher";
         $dispatcher->require or die "can't find dispatcher : $@";
         my $rule       = $dispatcher->match($req);
+	no warnings;
         my $controller = "${app}::Controller::$rule->{controller}";
+	use warnings;
         $controller->require;
-        my $method = $rule->{action}
-          or die "unknown action: $rule->{action} : $@";
+        my $method = $rule->{action} or return $self->handle_404;
         return $controller->$method($req);
       }
 }
 
-sub static_handler {
+sub handle_static {
     my ( $self, $filename ) = @_;
     my $path = $self->base_dir->file( $self->root, $filename );
     open my $fh, "<", $path or die $!;
@@ -64,6 +65,11 @@ sub static_handler {
         ],
         $fh
     ];
+}
+
+sub handle_404 {
+    my $self = shift;
+    return [404, [ "Content-Type" => "text/plain", "Content-Length" => 13 ], [ "404 not found" ]];
 }
 
 1;
