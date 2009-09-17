@@ -15,7 +15,7 @@ sub hi {
 
 sub redirect {
     my ($self, $c ) = @_;
-    $c->redirect( $c->uri_for( '/') );
+    $c->redirect( $c->req->uri->base );
 }
 
 1;

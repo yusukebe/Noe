@@ -5,6 +5,7 @@ use Path::Class;
 
 has 'request' => ( is => 'rw' , isa => 'Plack::Request', required => 1 );
 has 'base_dir' => ( is => 'rw', isa => 'Path::Class::Dir', required => 1 );
+*req = \&request;
 
 sub render {
     my ( $self, $tmpl, $args ) = @_;
