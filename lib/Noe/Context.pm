@@ -18,6 +18,11 @@ sub render {
     return [ 200, [ 'Content-Type' => 'text/html' ], [$out] ];
 }
 
+sub redirect {
+    my ( $self, $location ) = @_;
+    return [ 302, [ 'Location' => $location ], [''] ];
+}
+
 1;
 
 __END__
