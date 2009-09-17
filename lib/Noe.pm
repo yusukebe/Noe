@@ -3,9 +3,11 @@ use Mouse;
 our $VERSION = '0.01';
 use Plack::Request;
 use Path::Class;
+use File::Basename;
 use UNIVERSAL::require;
 
 has 'app' => ( is => 'ro', isa => 'Str', required => 1 );
+has 'root' => ( is => 'rw', isa => 'Str', required => 1, default => 'root' );
 
 has base_dir => (
     is         => 'rw',
@@ -30,8 +32,13 @@ sub BUILDARGS {
 sub psgi_handler {
     my $self = shift;
     return sub {
-        my $req = Plack::Request->new(shift);
         local *Noe::c = sub { $self };
+	my $req = Plack::Request->new(shift);
+	my $base = $req->base;
+	# serve static file
+	if( $req->uri =~ /$base(.+\.png)$/ ){
+	    return $self->static_handler( $1 );
+	}
         my $app        = $self->app;
         my $dispatcher = "${app}::Dispatcher";
         $dispatcher->require or die "can't find dispatcher : $@";
@@ -42,6 +49,21 @@ sub psgi_handler {
           or die "unknown action: $rule->{action} : $@";
         return $controller->$method($req);
       }
+}
+
+sub static_handler {
+    my ( $self, $filename ) = @_;
+    my $path = $self->base_dir->file( $self->root, $filename );
+    open my $fh, "<", $path or die $!;
+    return [
+        200,
+        [
+            "Content-Type"   => "image/jpeg",
+            "X-Sendfile"     => $path,
+            "Content-Length" => -s $fh
+        ],
+        $fh
+    ];
 }
 
 1;
