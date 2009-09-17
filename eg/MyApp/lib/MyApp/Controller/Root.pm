@@ -4,12 +4,12 @@ with 'Noe::Controller';
 
 sub root {
     my ( $self, $c  ) = @_;
-    $c->render('index.tt2');
+    $c->render('index.tt2', { message => $c->config->{message} } );
 }
 
 sub hi {
     my ( $self, $c ) = @_;
-    my $name = $c->request->param('name') || 'nanashi';
+    my $name = $c->req->param('name') || 'nanashi';
     $c->render('hi.tt2', { name => $name } );
 }
 

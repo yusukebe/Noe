@@ -1,3 +1,5 @@
+<h2>Message from Config</h2>
+<p>[% message | html %]</p>
 <h2>GET Request</h2>
 <form action="/hi">
 <input type="text" name="name" />

@@ -2,10 +2,23 @@ package Noe::Context;
 use Mouse;
 use Template;
 use Path::Class;
+use YAML;
 
-has 'request' => ( is => 'rw' , isa => 'Plack::Request', required => 1 );
-has 'base_dir' => ( is => 'rw', isa => 'Path::Class::Dir', required => 1 );
+has 'request' => ( is => 'ro' , isa => 'Plack::Request', required => 1 );
+has 'base_dir' => ( is => 'ro', isa => 'Path::Class::Dir', required => 1 );
+has 'app' => ( is => 'ro', isa => 'Str', required => 1 );
+has 'config' => ( is => 'ro', isa => 'HashRef|ArrayRef', lazy_build => 1 );
+
+no Mouse;
+
 *req = \&request;
+
+sub _build_config {
+    my $self = shift;
+    my $ref = YAML::LoadFile( $self->base_dir->file( lc( $self->app ) . '.yaml' ) )
+        or return {};
+    return $ref;
+}
 
 sub render {
     my ( $self, $tmpl, $args ) = @_;
@@ -25,6 +38,8 @@ sub redirect {
     my ( $self, $location ) = @_;
     return [ 302, [ 'Location' => $location ], [''] ];
 }
+
+
 
 1;
 

@@ -21,7 +21,6 @@ has 'mime_types' => (
         $mime_types;
     },
 );
-
 has 'base_dir' => (
     is         => 'rw',
     isa        => 'Path::Class::Dir',
@@ -45,9 +44,12 @@ sub BUILDARGS {
 sub psgi_handler {
     my $self = shift;
     return sub {
-        my $req = Plack::Request->new(shift);
-        my $context =
-          Noe::Context->new( request => $req, base_dir => $self->base_dir );
+        my $req     = Plack::Request->new(shift);
+        my $context = Noe::Context->new(
+            request  => $req,
+            base_dir => $self->base_dir,
+            app      => $self->app
+        );
         my $base = $req->base;
 
         # serve static file
