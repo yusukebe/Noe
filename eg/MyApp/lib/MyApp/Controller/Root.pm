@@ -18,5 +18,7 @@ sub redirect {
     $c->redirect( $c->req->uri->base );
 }
 
+sub error {}
+
 1;
 

@@ -72,8 +72,7 @@ sub psgi_handler {
         if( $code ){
             return $code;
         }else{
-            warn $@;
-            return $self->handle_404;
+            return $self->handle_500;
         }
     }
 }
@@ -103,7 +102,15 @@ sub handle_404 {
     my $self = shift;
     return [
         404, [ "Content-Type" => "text/plain", "Content-Length" => 13 ],
-        ["404 not found"]
+        ["404 Not Found"]
+    ];
+}
+
+sub handle_500 {
+    my $self = shift;
+    return [
+        500, [ "Content-Type" => "text/plain", "Content-Length" => 21 ],
+        ["Internal Server Error"]
     ];
 }
 
