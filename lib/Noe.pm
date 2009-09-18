@@ -67,7 +67,7 @@ sub psgi_handler {
         use warnings;
         $controller->require;
         my $method = $rule->{action} or return $self->handle_404;
-        if( my $code = $controller->$method($context) ){
+        if( my $code = $controller->$method($context, $rule->{args}) ){
             return $code;
         }else{
             return $self->handle_404;
