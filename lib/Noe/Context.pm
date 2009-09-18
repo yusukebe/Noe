@@ -1,5 +1,6 @@
 package Noe::Context;
 use Mouse;
+use Encode;
 use Template;
 use Path::Class;
 use YAML;
@@ -22,7 +23,9 @@ sub _build_config {
 
 sub render {
     my ( $self, $tmpl, $args ) = @_;
-    my $config = { INCLUDE_PATH => [ $self->base_dir->subdir('tmpl') ], };
+    my $config = {
+        INCLUDE_PATH   => [ $self->base_dir->subdir('tmpl') ],
+    };
     if( $tmpl =~ /\.tt2$/ ) { #xxx
         $config->{WRAPPER} = 'wrapper';
     }
@@ -31,6 +34,7 @@ sub render {
     $args->{base} = $self->request->base;
     $template->process( $tmpl, $args, \$out )
         || die $template->error(), "\n";
+    $out = encode('utf8', $out );
     return [ 200, [ 'Content-Type' => 'text/html' ], [$out] ];
 }
 
