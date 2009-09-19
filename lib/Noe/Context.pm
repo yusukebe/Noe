@@ -42,8 +42,7 @@ sub redirect {
     return [ 302, [ 'Location' => $location ], [''] ];
 }
 
-
-
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
