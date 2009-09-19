@@ -44,12 +44,7 @@ sub BUILDARGS {
 sub psgi_handler {
     my $self = shift;
     return sub {
-        my $req     = Plack::Request->new(shift);
-        my $context = Noe::Context->new(
-            request  => $req,
-            base_dir => $self->base_dir,
-            app      => $self->app
-        );
+        my $req  = Plack::Request->new(shift);
         my $base = $req->base;
 
         # serve static file
@@ -57,6 +52,12 @@ sub psgi_handler {
         if ( $req->uri =~ /$base(.+\.$regex)/ ) {
             return $self->handle_static($1);
         }
+
+        my $context = Noe::Context->new(
+            request  => $req,
+            base_dir => $self->base_dir,
+            app      => $self->app
+        );
 
         my $app        = $self->app;
         my $dispatcher = "${app}::Dispatcher";
