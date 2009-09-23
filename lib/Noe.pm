@@ -3,24 +3,12 @@ use Mouse;
 our $VERSION = '0.01';
 use Noe::Context;
 use Plack::Request;
-use File::Spec;
-use File::Basename;
 use Path::Class;
-use MIME::Types;
 use UNIVERSAL::require;
 
 has 'app' => ( is => 'ro', isa => 'Str', required => 1 );
 has 'root' => ( is => 'rw', isa => 'Str', required => 1, default => 'root' );
-has 'mime_types' => (
-    is      => 'ro',
-    isa     => 'MIME::Types',
-    lazy    => 1,
-    default => sub {
-        my $mime_types = MIME::Types->new( only_complete => 1 );
-        $mime_types->create_type_index;
-        $mime_types;
-    },
-);
+
 has 'base_dir' => (
     is         => 'rw',
     isa        => 'Path::Class::Dir',
@@ -47,12 +35,6 @@ sub psgi_handler {
         my $req  = Plack::Request->new(shift);
         my $base = $req->base;
 
-        # serve static file
-        my $regex = "(?:png|jpg|gif|css|txt)";
-        if ( $req->uri =~ /$base(.+\.$regex)/ ) {
-            return $self->handle_static($1);
-        }
-
         my $context = Noe::Context->new(
             request  => $req,
             base_dir => $self->base_dir,
@@ -76,27 +58,6 @@ sub psgi_handler {
             return $self->handle_500;
         }
     }
-}
-
-sub handle_static {
-    my ( $self, $filename ) = @_;
-    my $path =
-      $self->base_dir->file( $self->root,
-        File::Spec::Unix->splitpath($filename) );
-    open my $fh, "<", $path or return $self->handle_404;
-    my $content_type = 'text/plain';
-    if ( $filename =~ /.*\.(\S{1,})$/xms ) {
-        $content_type = $self->mime_types->mimeTypeOf($1)->type;
-    }
-    return [
-        200,
-        [
-            "Content-Type"   => $content_type,
-            "X-Sendfile"     => $path,
-            "Content-Length" => -s $fh
-        ],
-        $fh
-    ];
 }
 
 sub handle_404 {
