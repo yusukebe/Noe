@@ -30,7 +30,7 @@ sub render {
     my $template = Template->new($config);
     my $out;
     $args->{req}  = $self->req;
-    $args->{base} = $self->req->base;    #xxx
+    $args->{base} = $self->req->base; #xxx
     $template->process( $tmpl, $args, \$out )
       || die $template->error(), "\n";
     $out = encode( 'utf8', $out );

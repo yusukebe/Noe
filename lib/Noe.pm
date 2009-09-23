@@ -32,8 +32,11 @@ sub BUILDARGS {
 sub psgi_handler {
     my $self = shift;
     return sub {
-        my $req  = Plack::Request->new(shift);
-        my $base = $req->base;
+        my $env = shift;
+        if( defined $env->{HTTP_X_FORWARDED_HOST} ){
+            $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT} || 80;
+        }
+        my $req  = Plack::Request->new($env);
 
         my $context = Noe::Context->new(
             request  => $req,
