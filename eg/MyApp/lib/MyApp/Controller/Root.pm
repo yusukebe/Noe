@@ -1,6 +1,5 @@
 package MyApp::Controller::Root;
 use Mouse;
-with 'Noe::Controller';
 
 sub root {
     my ( $self, $c  ) = @_;
