@@ -33,6 +33,7 @@ sub psgi_handler {
     my $self = shift;
     return sub {
         my $env = shift;
+
         if( defined $env->{HTTP_X_FORWARDED_HOST} ){
             $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT} || 80;
         }
@@ -58,6 +59,7 @@ sub psgi_handler {
         if( $code ){
             return $code;
         }else{
+            warn $@;
             return $self->handle_500;
         }
     }

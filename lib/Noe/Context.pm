@@ -2,6 +2,7 @@ package Noe::Context;
 use Mouse;
 use Encode;
 use Template;
+use URI::WithBase;
 use Path::Class;
 use YAML;
 
@@ -30,7 +31,7 @@ sub render {
     my $template = Template->new($config);
     my $out;
     $args->{req}  = $self->req;
-    $args->{base} = $self->req->base; #xxx
+    $args->{base} = URI::WithBase->new( $self->req->uri );
     $template->process( $tmpl, $args, \$out )
       || die $template->error(), "\n";
     $out = encode( 'utf8', $out );

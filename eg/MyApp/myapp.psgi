@@ -5,12 +5,9 @@ use Plack::Middleware qw( Static );
 my $app = MyApp->new();
 
 builder {
-    enable Plack::Middleware::Static 'rules' => [
-        {
-            path =>  qr{\.(?:png|jpg|gif|css|txt)$},
-            root => './root/',
-        }
-    ];
+    enable Plack::Middleware::Static
+        path =>  qr{\.(?:png|jpg|gif|css|txt)$},
+            root => 'root/';
     $app->psgi_handler;
 };
 
