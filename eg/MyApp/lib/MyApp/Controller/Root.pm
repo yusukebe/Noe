@@ -14,7 +14,7 @@ sub hi {
 
 sub redirect {
     my ($self, $c ) = @_;
-    $c->redirect( $c->req->uri->base );
+    $c->redirect( $c->base );
 }
 
 sub error {}

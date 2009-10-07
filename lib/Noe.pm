@@ -1,6 +1,7 @@
 package Noe;
 use Mouse;
 our $VERSION = '0.01';
+use URI;
 use Noe::Context;
 use Plack::Request;
 use Path::Class;
@@ -42,7 +43,8 @@ sub psgi_handler {
         my $context = Noe::Context->new(
             request  => $req,
             base_dir => $self->base_dir,
-            app      => $self->app
+            app      => $self->app,
+            base     => $self->base_uri($env),
         );
 
         my $app        = $self->app;
@@ -63,6 +65,18 @@ sub psgi_handler {
             return $self->handle_500;
         }
     }
+}
+
+sub base_uri {
+    my ( $self, $env ) = @_;
+    my $base_path;
+    $base_path = $env->{SCRIPT_NAME} || '/';
+    my $base = URI->new;
+    $base->scheme( $env->{'psgi.url_scheme'});
+    $base->host($env->{HTTP_HOST} || $env->{SERVER_NAME});
+    $base->port($env->{SERVER_PORT});
+    $base->path($base_path);
+    return $base;
 }
 
 sub handle_404 {

@@ -2,14 +2,15 @@ package Noe::Context;
 use Mouse;
 use Encode;
 use Template;
-use URI::WithBase;
+use URI;
 use Path::Class;
 use YAML;
 
-has 'request' => ( is => 'ro' , isa => 'Plack::Request', required => 1 );
+has 'request'  => ( is => 'ro', isa => 'Plack::Request',   required => 1 );
 has 'base_dir' => ( is => 'ro', isa => 'Path::Class::Dir', required => 1 );
-has 'app' => ( is => 'ro', isa => 'Str', required => 1 );
+has 'app'      => ( is => 'ro', isa => 'Str',              required => 1 );
 has 'config' => ( is => 'ro', isa => 'HashRef|ArrayRef', lazy_build => 1 );
+has 'base' => ( is => 'ro', isa => 'URI', required => 1 );
 
 no Mouse;
 
@@ -31,7 +32,7 @@ sub render {
     my $template = Template->new($config);
     my $out;
     $args->{req}  = $self->req;
-    $args->{base} = URI::WithBase->new( $self->req->uri );
+    $args->{base} = $self->base;
     $template->process( $tmpl, $args, \$out )
       || die $template->error(), "\n";
     $out = encode( 'utf8', $out );
@@ -40,7 +41,8 @@ sub render {
 
 sub redirect {
     my ( $self, $location ) = @_;
-    return [ 302, [ 'Location' => $location ], [''] ];
+    warn $location;
+    return [ 302, [ 'Location' => $location ], [] ];
 }
 
 __PACKAGE__->meta->make_immutable;
