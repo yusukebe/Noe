@@ -35,8 +35,8 @@ sub psgi_handler {
     return sub {
         my $env = shift;
 
-        if( defined $env->{HTTP_X_FORWARDED_HOST} ){
-            $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT} || 80;
+        if( defined $env->{HTTP_X_FORWARDED_HOST} && $env->{HTTP_X_FORWARDED_HOST} != 80 ){
+            $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT};
         }
         my $req  = Plack::Request->new($env);
 
