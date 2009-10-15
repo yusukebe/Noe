@@ -1,13 +1,12 @@
 use MyApp;
 use Plack::Builder;
-use Plack::Middleware qw( Static );
 
 my $app = MyApp->new();
 
 builder {
-    enable Plack::Middleware::Static
-        path =>  qr{\.(?:png|jpg|gif|css|txt)$},
-            root => 'root/';
+    enable "Plack::Middleware::Static",
+      path => qr{\.(?:png|jpg|gif|css|txt|js)$},
+      root => 'root/';
     $app->psgi_handler;
 };
 
