@@ -18,6 +18,7 @@ has 'base_dir' => (
 
 sub _build_base_dir {
     my $self = shift;
+    # tokuhirom hacks
     my $p    = $self->app() . ".pm";
     $p =~ s!::!/!g;
     my $path = $INC{$p};
@@ -32,9 +33,9 @@ sub BUILDARGS {
 
 sub psgi_handler {
     my $self = shift;
+
     return sub {
         my $env = shift;
-
         if( defined $env->{HTTP_X_FORWARDED_HOST} && $env->{HTTP_X_FORWARDED_HOST} != 80 ){
             $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT};
         }
@@ -71,7 +72,7 @@ sub base_uri {
     my $base_path;
     $base_path = $env->{SCRIPT_NAME} || '/';
     my $base = URI->new;
-    $base->scheme( $env->{'psgi.url_scheme'});
+    $base->scheme( $env->{'psgi.url_scheme'} );
     $base->host($env->{HTTP_HOST} || $env->{SERVER_NAME});
     $base->port($env->{SERVER_PORT});
     $base->path($base_path);
