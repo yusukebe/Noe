@@ -51,10 +51,9 @@ sub psgi_handler {
         my $dispatcher = "${app}::Dispatcher";
         $dispatcher->require or die "can't find dispatcher : $@";
         my $rule = $dispatcher->match($req);
-        no warnings;
         my $controller = "${app}::Controller::$rule->{controller}";
-        use warnings;
-        $controller->use or return $self->handle_404;
+        eval { $controller->use };
+        if ($@) { return $self->handle_404 }
         my $method = $rule->{action} or return $self->handle_404;
         my $code;
         eval { $code = $controller->$method($context, $rule->{args}) };

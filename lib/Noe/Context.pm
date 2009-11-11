@@ -36,7 +36,7 @@ sub render {
     $template->process( $tmpl, $args, \$out )
       || die $template->error(), "\n";
     $out = encode( 'utf8', $out );
-    return [ 200, [ 'Content-Type' => 'text/html' ], [$out] ];
+    return [ 200, [ 'Content-Type' => 'text/html', 'Content-Length' => length $out ], [$out] ];
 }
 
 sub redirect {

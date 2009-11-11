@@ -1,3 +1,4 @@
+use lib qw( ../../lib ./lib );
 use MyApp;
 use Plack::Builder;
 
