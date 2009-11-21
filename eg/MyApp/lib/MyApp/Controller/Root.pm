@@ -6,14 +6,14 @@ no Mouse;
 
 sub root {
     my ( $self, $c  ) = @_;
-    $c->render('index.tt2', { message => $c->config->{message} } );
+    $c->render('index', { message => $c->config->{message} } );
 }
 
 sub hi {
     my ( $self, $c ) = @_;
     my $name = $c->req->param('name') || 'nanashi';
     $name = decode_utf8( $name );
-    $c->render('hi.tt2', { name => $name } );
+    $c->render('hi', { name => $name } );
 }
 
 sub redirect {

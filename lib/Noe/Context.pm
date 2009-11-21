@@ -1,10 +1,9 @@
 package Noe::Context;
 use Mouse;
 use Encode;
-use Template;
+use Text::MicroTemplate::Extended;
 use URI;
 use Path::Class;
-use YAML;
 
 has 'request'  => ( is => 'ro', isa => 'Plack::Request',   required => 1 );
 has 'base_dir' => ( is => 'ro', isa => 'Path::Class::Dir', required => 1 );
@@ -25,16 +24,13 @@ sub _build_config {
 
 sub render {
     my ( $self, $tmpl, $args ) = @_;
-    my $config = { INCLUDE_PATH => [ $self->base_dir->subdir('tmpl') ], };
-    if ( $tmpl =~ /\.tt2$/ ) {    #xxx
-        $config->{WRAPPER} = 'wrapper';
-    }
-    my $template = Template->new($config);
-    my $out;
     $args->{req}  = $self->req;
     $args->{base} = $self->base;
-    $template->process( $tmpl, $args, \$out )
-      || die $template->error(), "\n";
+    my $mt = Text::MicroTemplate::Extended->new(
+        include_path  => [ $self->base_dir->subdir('tmpl') ],
+        template_args => $args,
+    );
+    my $out = $mt->render( $tmpl );
     $out = encode( 'utf8', $out );
     return [ 200, [ 'Content-Type' => 'text/html', 'Content-Length' => length $out ], [$out] ];
 }

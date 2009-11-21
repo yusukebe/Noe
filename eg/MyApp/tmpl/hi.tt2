@@ -1,2 +1,0 @@
-<h2>Hi, [% name | html %]</h2>
-<p><a href="[% base %]">Back</a></p>
