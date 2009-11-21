@@ -2,7 +2,7 @@
 <head>
 <title>Hello, Noe!</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="<?= base ?>css/grids-min.css" />
+<link rel="stylesheet" type="text/css" href="<?= $base ?>css/grids-min.css" />
 </head>
 <body>
 <div id="doc">

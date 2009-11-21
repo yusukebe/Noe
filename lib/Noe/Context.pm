@@ -4,6 +4,7 @@ use Encode;
 use Text::MicroTemplate::Extended;
 use URI;
 use Path::Class;
+use YAML::XS;
 
 has 'request'  => ( is => 'ro', isa => 'Plack::Request',   required => 1 );
 has 'base_dir' => ( is => 'ro', isa => 'Path::Class::Dir', required => 1 );
@@ -17,7 +18,7 @@ no Mouse;
 
 sub _build_config {
     my $self = shift;
-    my $ref = YAML::LoadFile( $self->base_dir->file( lc( $self->app ) . '.yaml' ) )
+    my $ref = YAML::XS::LoadFile( $self->base_dir->file( lc( $self->app ) . '.yaml' ) )
         or return {};
     return $ref;
 }
