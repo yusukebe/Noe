@@ -1,33 +1,28 @@
 package Noe;
-use Mouse;
+use strict;
 our $VERSION = '0.01';
 use URI;
 use Noe::Context;
 use Plack::Request;
-use Path::Class qw ( dir );
 use UNIVERSAL::require;
 
-has 'app' => ( is => 'ro', isa => 'Str', required => 1 );
-has 'root' => ( is => 'rw', isa => 'Str', required => 1, default => 'root' );
-has 'base_dir' => (
-    is         => 'rw',
-    isa        => 'Str',
-    lazy_build => 1,
-);
+sub new {
+    my ( $class, %opt ) = @_;
+    my $self = bless {
+        app  => $class,
+        root => $opt{root} || 'root',
+    }, $class;
+    $self;
+}
 
-sub _build_base_dir {
+sub base_dir {
     my $self = shift;
     # tokuhirom hacks
-    my $p    = $self->app() . ".pm";
+    my $p    = $self->{app} . ".pm";
     $p =~ s!::!/!g;
     my $path = $INC{$p};
     $path =~ s!lib/$p$!\.!;
     return "$path/";
-}
-
-sub BUILDARGS {
-    my ($class) = shift;
-    return { app => $class };
 }
 
 sub psgi_handler {
@@ -42,12 +37,12 @@ sub psgi_handler {
 
         my $context = Noe::Context->new(
             request  => $req,
-            base_dir => $self->base_dir,
-            app      => $self->app,
+            base_dir => $self->base_dir(),
+            app      => $self->{app},
             base     => $self->base_uri($env),
         );
 
-        my $app        = $self->app;
+        my $app        = $self->{app};
         my $dispatcher = "${app}::Dispatcher";
         $dispatcher->require or die "can't find dispatcher : $@";
         my $rule = $dispatcher->match($req);
@@ -94,7 +89,6 @@ sub handle_500 {
     ];
 }
 
-__PACKAGE__->meta->make_immutable;
 1;
 
 __END__

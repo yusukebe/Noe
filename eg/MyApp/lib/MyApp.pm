@@ -1,5 +1,3 @@
 package MyApp;
-use Mouse;
-extends 'Noe';
-
+use base 'Noe';
 1;
