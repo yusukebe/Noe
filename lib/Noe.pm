@@ -1,6 +1,6 @@
 package Noe;
 use strict;
-our $VERSION = '0.01';
+our $VERSION = '0.0';
 use URI;
 use Noe::Context;
 use Plack::Request;
