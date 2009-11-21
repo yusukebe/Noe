@@ -4,15 +4,14 @@ our $VERSION = '0.01';
 use URI;
 use Noe::Context;
 use Plack::Request;
-use Path::Class;
+use Path::Class qw ( dir );
 use UNIVERSAL::require;
 
 has 'app' => ( is => 'ro', isa => 'Str', required => 1 );
 has 'root' => ( is => 'rw', isa => 'Str', required => 1, default => 'root' );
-
 has 'base_dir' => (
     is         => 'rw',
-    isa        => 'Path::Class::Dir',
+    isa        => 'Str',
     lazy_build => 1,
 );
 
@@ -23,7 +22,7 @@ sub _build_base_dir {
     $p =~ s!::!/!g;
     my $path = $INC{$p};
     $path =~ s!lib/$p$!\.!;
-    dir($path);
+    return "$path/";
 }
 
 sub BUILDARGS {

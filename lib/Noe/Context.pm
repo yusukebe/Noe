@@ -3,11 +3,10 @@ use Mouse;
 use Encode;
 use Text::MicroTemplate::Extended;
 use URI;
-use Path::Class;
 use YAML::XS;
 
 has 'request'  => ( is => 'ro', isa => 'Plack::Request',   required => 1 );
-has 'base_dir' => ( is => 'ro', isa => 'Path::Class::Dir', required => 1 );
+has 'base_dir' => ( is => 'ro', isa => 'Str', required => 1 );
 has 'app'      => ( is => 'ro', isa => 'Str',              required => 1 );
 has 'config' => ( is => 'ro', isa => 'HashRef|ArrayRef', lazy_build => 1 );
 has 'base' => ( is => 'ro', isa => 'URI', required => 1 );
@@ -18,7 +17,7 @@ no Mouse;
 
 sub _build_config {
     my $self = shift;
-    my $ref = YAML::XS::LoadFile( $self->base_dir->file( lc( $self->app ) . '.yaml' ) )
+    my $ref = YAML::XS::LoadFile( $self->base_dir . ( lc( $self->app ) . '.yaml' ) )
         or return {};
     return $ref;
 }
@@ -28,7 +27,7 @@ sub render {
     $args->{req}  = $self->req;
     $args->{base} = $self->base;
     my $mt = Text::MicroTemplate::Extended->new(
-        include_path  => [ $self->base_dir->subdir('tmpl') ],
+        include_path  => [ $self->base_dir . 'tmpl' ],
         template_args => $args,
     );
     my $out = $mt->render( $tmpl );
