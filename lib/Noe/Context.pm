@@ -11,6 +11,7 @@ sub new {
         base_dir => $opt{base_dir},
         app      => $opt{app},
         base     => $opt{base},
+        content_type => 'text/html',
     }, $class;
     $self;
 }
@@ -40,13 +41,25 @@ sub render {
         include_path  => [ $self->base_dir . 'tmpl' ],
         template_args => $args,
     );
-    my $out = $mt->render( $tmpl );
-    return [ 200, [ 'Content-Type' => 'text/html', 'Content-Length' => length $out ], [$out] ];
+    my $out = $mt->render($tmpl);
+    return [
+        200,
+        [
+            'Content-Type'   => $self->{content_type},
+            'Content-Length' => length $out
+        ],
+        [$out]
+    ];
 }
 
 sub redirect {
     my ( $self, $location ) = @_;
     return [ 302, [ 'Location' => $location ], [] ];
+}
+
+sub content_type {
+    my ( $self, $content_type ) = @_;
+    $self->{content_type} = $content_type || 'text/html';
 }
 
 1;
