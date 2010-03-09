@@ -1,5 +1,5 @@
 package MyApp::Dispatcher;
-use HTTPx::Dispatcher;
+use Noe::Dispatcher;
 
 connect ''         => { controller => 'Root', action => 'index' };
 connect 'hi'       => { controller => 'Root', action => 'hi' };

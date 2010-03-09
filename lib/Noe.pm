@@ -6,7 +6,7 @@ use Noe::Context;
 use Plack::Request;
 use UNIVERSAL::require;
 
-sub new { 
+sub new {
     my ( $class, %opt ) = @_;
     my $self = bless {
         app  => $class,
