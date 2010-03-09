@@ -1,6 +1,6 @@
 package MyApp::Controller::Root;
 
-sub root {
+sub index {
     my ( $self, $c  ) = @_;
     $c->render('index', { message => $c->config->{message} } );
 }
