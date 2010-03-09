@@ -9,7 +9,7 @@ sub new {
     my ( $class, %opt ) = @_;
     my $self = bless {
         request  => $opt{request},
-        base_dir => $opt{base_dir},
+        base_dir => $opt{base_dir} || '/',
         app      => $opt{app},
         base     => $opt{base},
         content_type => 'text/html',
@@ -40,21 +40,22 @@ sub render {
     $args->{req}  = $self->req;
     $args->{base} = $self->base;
 
-    my $view;
+    my ($view, $class, $file );
     if ( ref $tmpl eq 'HASH' ) {
-        my $class = "Noe::View::$tmpl->{as}";
-        $class->require or die "Can't find viwe class: $@";
-        $view = $class->new;
+        $class = "Noe::View::$tmpl->{as}";
+        $file = defined $tmpl->{file} ? $tmpl->{file} : '';
     }
     else {
-        require Noe::View::TMT;
-        $view = Noe::View::TMT->new(
-            include_path => [ $self->base_dir . 'tmpl' ],
-            file         => $tmpl,
-            content_type => $self->{content_type},
-        );
+        $file = $tmpl;
+	$class = "Noe::View::TMT";
     }
 
+    $class->require or die "Can't find viwe class: $@";
+    $view = $class->new(
+        include_path => [ $self->base_dir . 'tmpl' ],
+        file         => $file,
+        content_type => $self->{content_type},
+    );
     return $view->render($args);
 }
 
