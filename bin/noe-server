@@ -1,0 +1,7 @@
+#!/usr/bin/perl
+use Noe::Server;
+use strict;
+use FindBin::libs;
+
+my $server = Noe::Server->new( @ARGV );
+$server->run;

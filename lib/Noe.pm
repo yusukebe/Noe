@@ -99,7 +99,15 @@ Noe - Isurugi Noe in true tears.
 
 =head1 SYNOPSIS
 
-  use Noe;
+  # MyApp.pm
+  package MyApp;
+  use base 'Noe';
+  1;
+
+  # myapp.psgi
+  use MyApp;
+  my $app = MyApp->new();
+  $app->psgi_handler;
 
 =head1 DESCRIPTION
 
