@@ -12,6 +12,8 @@ sub new {
 
 sub render {
     my ( $self, $args ) = @_;
+    delete $args->{req};
+    delete $args->{base};
     my $json = JSON::XS->new->utf8->encode( $args );
     $self->build_response( $json, [ 'Content-Type' => 'application/json' ] );
 }

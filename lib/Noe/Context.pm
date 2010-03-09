@@ -1,6 +1,6 @@
 package Noe::Context;
 use strict;
-use Text::MicroTemplate::Extended;
+use warnings;
 use URI;
 use YAML::XS;
 use UNIVERSAL::require;
@@ -37,33 +37,25 @@ sub config {
 sub render {
     my ( $self, $tmpl, $args ) = @_;
 
+    $args->{req}  = $self->req;
+    $args->{base} = $self->base;
+
     my $view;
-    if( ref $tmpl eq 'HASH' ){
-      my $class = "Noe::View::$tmpl->{as}";
-      $class->require or die "Can't find viwe class: $@";
-      $view = $class->new;
-    }else{
-      require Noe::View::TMT;
-      $view = Noe::View::TMT->new;
+    if ( ref $tmpl eq 'HASH' ) {
+        my $class = "Noe::View::$tmpl->{as}";
+        $class->require or die "Can't find viwe class: $@";
+        $view = $class->new;
+    }
+    else {
+        require Noe::View::TMT;
+        $view = Noe::View::TMT->new(
+            include_path => [ $self->base_dir . 'tmpl' ],
+            file         => $tmpl,
+            content_type => $self->{content_type},
+        );
     }
 
     return $view->render($args);
-
-    $args->{req}  = $self->req;
-    $args->{base} = $self->base;
-    my $mt = Text::MicroTemplate::Extended->new(
-        include_path  => [ $self->base_dir . 'tmpl' ],
-        template_args => $args,
-    );
-    my $out = $mt->render($tmpl);
-    return [
-        200,
-        [
-            'Content-Type'   => $self->{content_type},
-            'Content-Length' => length $out
-        ],
-        [$out]
-    ];
 }
 
 sub redirect {
