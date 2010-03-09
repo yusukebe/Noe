@@ -2,6 +2,7 @@ package Noe::Server;
 use strict;
 use warnings;
 use Plack::Runner;
+use Plack::Middleware::Static;
 use Path::Class qw( dir );
 use UNIVERSAL::require;
 
@@ -17,10 +18,15 @@ sub new {
 sub run {
     my $self = shift;
     my $app;
-    eval { $app = $self->{class}->new };
+    eval { $app = $self->{class}->new->psgi_handler };
+    $app = Plack::Middleware::Static->wrap(
+        $app,
+        path => qr{^/static},
+        root => './root/'
+    );
     my $runner = Plack::Runner->new;
     $runner->parse_options(@ARGV);
-    $runner->run( $app->psgi_handler );
+    $runner->run($app);
 }
 
 #XXX
