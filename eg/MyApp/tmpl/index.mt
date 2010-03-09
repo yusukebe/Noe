@@ -11,4 +11,6 @@
 <img src="<?= $base ?>images/yusukebe.png" alt="yusukebe" />
 <h2>Redirect</h2>
 <a href="<?= $base ?>redirect">/redirect</a>
+<h2>JSON</h2>
+<a href="<?= $base ?>json">/json</a>
 <? } ?>
