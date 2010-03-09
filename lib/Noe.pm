@@ -6,7 +6,7 @@ use Noe::Context;
 use Plack::Request;
 use UNIVERSAL::require;
 
-sub new {
+sub new { 
     my ( $class, %opt ) = @_;
     my $self = bless {
         app  => $class,
@@ -95,7 +95,7 @@ __END__
 
 =head1 NAME
 
-Noe -
+Noe - Isurugi Noe in true tears.
 
 =head1 SYNOPSIS
 
@@ -103,13 +103,15 @@ Noe -
 
 =head1 DESCRIPTION
 
-Noe is
+Noe is Minimal Web Application Framework based on Plack/PSGI.
 
 =head1 AUTHOR
 
 Yusuke Wada E<lt>yusuke at kamawada.comE<gt>
 
 =head1 SEE ALSO
+
+Plack/PSGI
 
 =head1 LICENSE
 
