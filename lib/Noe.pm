@@ -44,7 +44,7 @@ sub psgi_handler {
 
         my $app        = $self->{app};
         my $dispatcher = "${app}::Dispatcher";
-        $dispatcher->require or die "can't find dispatcher : $@";
+        $dispatcher->require or die "Can't find dispatcher : $@";
         my $rule = $dispatcher->match($req);
         my $controller = "${app}::Controller::$rule->{controller}";
         eval { $controller->use };

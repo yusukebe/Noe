@@ -3,6 +3,7 @@ use strict;
 use Text::MicroTemplate::Extended;
 use URI;
 use YAML::XS;
+use UNIVERSAL::require;
 
 sub new {
     my ( $class, %opt ) = @_;
@@ -35,6 +36,19 @@ sub config {
 
 sub render {
     my ( $self, $tmpl, $args ) = @_;
+
+    my $view;
+    if( ref $tmpl eq 'HASH' ){
+      my $class = "Noe::View::$tmpl->{as}";
+      $class->require or die "Can't find viwe class: $@";
+      $view = $class->new(%$args);
+    }else{
+      require Noe::View::TMT;
+      $view = Noe::View::TMT->new(%$args);
+    }
+
+    return $view->render;
+
     $args->{req}  = $self->req;
     $args->{base} = $self->base;
     my $mt = Text::MicroTemplate::Extended->new(
