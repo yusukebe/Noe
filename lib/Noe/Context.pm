@@ -41,13 +41,13 @@ sub render {
     if( ref $tmpl eq 'HASH' ){
       my $class = "Noe::View::$tmpl->{as}";
       $class->require or die "Can't find viwe class: $@";
-      $view = $class->new(%$args);
+      $view = $class->new;
     }else{
       require Noe::View::TMT;
-      $view = Noe::View::TMT->new(%$args);
+      $view = Noe::View::TMT->new;
     }
 
-    return $view->render;
+    return $view->render($args);
 
     $args->{req}  = $self->req;
     $args->{base} = $self->base;
