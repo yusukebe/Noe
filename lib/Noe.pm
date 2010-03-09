@@ -21,7 +21,7 @@ sub base_dir {
     my $p    = $self->{app} . ".pm";
     $p =~ s!::!/!g;
     my $path = $INC{$p};
-    $path =~ s!lib/$p$!\.!;
+    $path =~ s!(?:blib/)?lib/$p$!\.!;
     return "$path/";
 }
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
 use t::Utils;
 use_ok('TestApp');
 
@@ -23,3 +23,5 @@ is_deeply $res,
     '200', [ 'Content-Type' => 'text/html', 'Content-Length' => 11 ],
     ['Hello World']
   ] , 'Got Hello World;' ;
+
+done_testing;
