@@ -3,6 +3,9 @@ use strict;
 use warnings;
 use Plack::Runner;
 use Plack::Middleware::Static;
+use Plack::Middleware::Debug;
+use Plack::Middleware::Conditional;
+use Plack::Middleware::AccessLog;
 use Path::Class qw( dir );
 use UNIVERSAL::require;
 
@@ -24,6 +27,15 @@ sub run {
         path => qr{^/static},
         root => './root/'
     );
+#    $app = Plack::Middleware::Debug->wrap($app);
+    $app = Plack::Middleware::Conditional->wrap(
+        $app,
+        condition =>
+          sub { my $env = shift; !( $env->{PATH_INFO} =~ /^\/static/ ) },
+        builder =>
+          sub { Plack::Middleware::AccessLog->wrap( $app ) },
+    );
+    $ENV{PLACK_ENV} = 'test';
     my $runner = Plack::Runner->new;
     $runner->parse_options(@ARGV);
     $runner->run($app);
