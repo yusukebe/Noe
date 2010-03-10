@@ -1,0 +1,47 @@
+---
+class: Noe::Setup::Flavor
+module_setup_flavor_devel: 1
+plugins:
+    - Template
+testdata:
+  dirs:
+    - root
+    - root/static
+    - root/static/css
+    - tmpl
+    - lib
+    - lib/MyApp
+    - lib/MyApp/Controller
+  files:
+    - file: myapp.yaml
+      likes:
+        - message
+    - file: myapp.psgi
+      likes:
+        - MyApp
+        - Plack::Builder
+    - file: root/static/css/screen.css
+      likes:
+        - Blueprint
+    - file: root/static/css/print.css
+      likes:
+        - Blueprint
+    - file: root/static/css/ie.css
+      likes:
+        - Blueprint
+    - file: root/static/css/LICENSE
+      likes:
+        - Blueprint
+    - file: tmpl/index.mt
+      likes:
+        - html
+    - file: lib/MyApp.pm
+      likes:
+        - Noe
+    - file: lib/MyApp/Dispatcher.pm
+      likes:
+        - Noe::Dispatcher
+    - file: lib/MyApp/Controller/Root.pm
+      likes:
+        - Controller::Root
+  module: MyApp

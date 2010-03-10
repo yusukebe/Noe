@@ -4,6 +4,8 @@ all_from 'lib/Noe.pm';
 
 # requires '';
 
+install_script 'bin/noe-server';
+
 tests 't/*.t';
 #author_tests 'xt';
 

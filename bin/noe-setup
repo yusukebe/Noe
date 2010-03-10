@@ -1,0 +1,7 @@
+#!/usr/bin/perl
+use Noe::Setup;
+use strict;
+
+my $app_name = $ARGV[0];
+my $setup = Noe::Setup->run( $app_name );
+$setup->run;
