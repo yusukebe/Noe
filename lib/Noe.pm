@@ -126,6 +126,74 @@ Then run with plackup
 
   $ plackup myapp_web.psgi
 
+=head2 MAKE YOUR APPLICATION
+
+=head3 Dispatcher
+
+Noe::Dispatcher is HTTPx::Dispatcher based. Write rules on your dispatcher class.
+
+  package MyApp::Web::Dispatcher;
+  use Noe::Dispatcher;
+
+  connect ''         => { controller => 'Root', action => 'index' };
+  connect 'hi'       => { controller => 'Root', action => 'hi' };
+  connect 'json'     => { controller => 'JSON', action => 'index' };
+
+  1;
+
+=head3 Controller
+
+You can write simply.
+
+  package MyApp::Web::Controller::Root;
+
+  sub index {
+      my ( $self, $c  ) = @_;
+      $c->render('index', { message => $c->config->{message} } );
+  }
+
+  sub hi {
+      my ( $self, $c ) = @_;
+      my $name = $c->req->param('name') || 'no name';
+      $c->render('hi', { name => $name } );
+  }
+
+=head3 View
+
+Default view template engine is 'Text::MicroTemplate::Extended'.
+Write index.mt and hi.mt in "tmpl" directory.
+
+  <h2>Message from Config</h2>
+  <p><?= $message ?></p>
+  <h2>GET Request</h2>
+  <form action="/hi">
+  <input type="text" name="name" />
+  <input type="submit">
+  </form>
+
+Template-Toolkit and JSON views are available now.
+If you return as JSON write controller like below.
+
+  package MyApp::Web::Controller::JSON;
+
+  sub index {
+      my ( $self, $c ) = @_;
+      $c->render( { as => 'JSON' }, { message => $c->config->{message} } );
+  }
+
+  1;
+
+=head1 NOT YET
+
+Session is not supported yet.
+
+=head1 WHAT IS "Noe"
+
+The character of my favorite TV animation "true tears".
+She said
+
+  私...涙、あげちゃったから [ I've presented my tears to my lover. ]
+
 =head1 AUTHOR
 
 Yusuke Wada E<lt>yusuke at kamawada.comE<gt>

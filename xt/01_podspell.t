@@ -13,3 +13,6 @@ psgi
 MyApp
 myapp
 plackup
+JSON
+mt
+tmpl
