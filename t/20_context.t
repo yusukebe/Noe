@@ -5,10 +5,10 @@ use t::Utils qw( req );
 
 my $req = req;
 ok($req);
-use_ok('Noe::Context');
+use_ok('Noe::Component');
 
 {
-    my $c = Noe::Context->new( request => $req );
+    my $c = Noe::Component->new( request => $req );
     ok($c);
     my $res = $c->render( { as => 'JSON' }, { message => 'Hello' } );
     ok( $res, 'Render as JSON' );
@@ -20,7 +20,7 @@ use_ok('Noe::Context');
       'Got JSON;';
 }
 {
-    my $c = Noe::Context->new( request => $req, base_dir => 't/' );
+    my $c = Noe::Component->new( request => $req, base_dir => 't/' );
     ok($c);
     my $res = $c->render( { as => 'TT', file => 'index.tt2' }, { message => 'Hello' } );
     ok( $res, 'Render as TT' );

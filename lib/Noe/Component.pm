@@ -59,14 +59,41 @@ sub render {
     return $view->render($args);
 }
 
-sub redirect {
-    my ( $self, $location ) = @_;
-    return [ 302, [ 'Location' => $location ], [] ];
-}
-
 sub content_type {
     my ( $self, $content_type ) = @_;
     $self->{content_type} = $content_type || 'text/html';
+}
+
+sub handle {
+    my ( $self, $code, $body, $type ) = @_;
+    return $self->handle(500) unless $code;
+    my $headers = $self->_headers( $body, $type );
+    my $b = $body ? [$body] : [];
+    return [ $code, $headers, $b ];
+}
+
+sub _headers {
+    my ($self, $body, $type, @h) = @_;
+    my $headers = [];
+    push @$headers, 'Content-Type' => $type if $type;
+    push @$headers, 'Content-Length' => length $body if $body;
+    push @$headers, @h;
+    return $headers;
+}
+
+sub redirect {
+    my ( $self, $url, $code ) = @_;
+    $code ||= 302;
+    return [ $code, [ 'Location' => $url ], [] ];
+}
+
+sub response {
+    my $self = shift;
+    my ( $body, $type, @headers ) = @_;
+    $type = $self->{content_type} if !$type && $self->{content_type};
+    my $headers = $self->_headers( $body, $type, @headers );
+    my $b = $body ? [$body] : [];
+    return [ 200 , $headers, $b ];
 }
 
 1;
