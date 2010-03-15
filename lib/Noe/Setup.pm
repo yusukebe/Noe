@@ -1,18 +1,89 @@
-package Noe::Starter;
-use base 'Module::Packer::Starter';
+package Noe::Setup;
 use strict;
 use warnings;
+use Template;
+use IO::File;
+use Path::Class qw( dir );
+use YAML qw( Load );
+
+sub new {
+    my ( $class, %opt ) = @_;
+    my $module = $opt{module} || $ARGV[0] || '';
+    $module =~ s/\/$//;
+    my $self = bless { module => $module, dir => './' }, $class;
+    $self;
+}
+
+sub run {
+    my $self = shift;
+    unless ( $self->{module} ) {
+        die "New module name argument is required\n";
+    }
+    my $yaml = join '', <DATA>; #XXX
+    $yaml = $self->process_tt($yaml);
+    $self->unpack($yaml);
+}
+
+sub process_tt {
+    my ( $self, $content ) = @_;
+    my $tt = Template->new(
+        {
+            START_TAG => quotemeta('[___'),
+            END_TAG   => quotemeta('___]'),
+        }
+    );
+    my $output;
+    $tt->process( \$content, $self->vars, \$output );
+    return $output;
+}
+
+sub vars {
+    my $self = shift;
+    my @path = split '::', $self->{module};
+    my $file = pop @path;
+    return { name => $self->{module}, file => "$file.pm" };
+}
+
+sub unpack {
+    my ( $self, $data ) = @_;
+    my $entries = $self->parse($data);
+    $self->generate($entries);
+}
+
+sub generate {
+    my ( $self, $entries ) = @_;
+    for my $entry (@$entries) {
+        my $filepath = File::Spec->catfile( $self->{dir}, $entry->{file} );
+        my ( $v, $dir ) = File::Spec->splitpath($filepath);
+        dir($dir)->mkpath;
+        my $fh = IO::File->new( $filepath, "w" );
+        if ( defined $fh ) {
+            warn "Writing $filepath\n";
+            print $fh $entry->{template};
+            $fh->close;
+        }
+    }
+}
+
+sub parse {
+    my ( $self, $data ) = @_;
+    my ( $entry, $entries );
+    for my $line ( split "\n", $data ) {
+        if ( $line =~ /^---$/ ) {
+            if ($entry) {
+                $entry .= "\n";
+                push @$entries, Load($entry);
+                $entry = '';
+            }
+        }
+        else {
+            $entry .= "$line\n";
+        }
+    }
+    return $entries;
+}
 
 1;
-__END__
-
- =head1 SYNOPSIS
-
-   use Noe::Starter::Starter;
-   my $starter = Noe::Starter::Starter->new;
-   $starter->run;
-
- =cut
 
 __DATA__
 
