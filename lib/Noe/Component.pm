@@ -28,7 +28,9 @@ sub config {
     if( defined $self->{config} ){
         return $self->{config};
     }else{
-        my $ref = YAML::LoadFile( $self->base_dir . ( lc( $self->{app} ) . '.yaml' ) );
+        my $file = lc $self->{app};
+        $file =~ s/::/_/g;
+        my $ref = YAML::LoadFile( $self->base_dir . $file . '.yaml' );
         $self->{config} = $ref;
         return $ref;
     }

@@ -41,7 +41,7 @@ sub vars {
     my $self = shift;
     my @path = split '::', $self->{module};
     my $file = pop @path;
-    return { name => $self->{module}, file => "$file.pm" };
+    return { name => $self->{module}, file => "$file.pm", path => \@path };
 }
 
 sub unpack {
@@ -763,9 +763,9 @@ template: |
   PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGES.
 ---
-file: "[___ name.replace('::','-') ___]/lib/[___ name.replace('::','-') ___]/Controller/Root.pm"
+file: "[___ name.replace('::','-') ___]/lib/[___ name.replace('::','/') ___]/Controller/Root.pm"
 template: |
-  package [___ name.replace('::','-') ___]::Controller::Root;
+  package [___ name ___]::Controller::Root;
   
   sub index {
       my ( $self, $c ) = @_;
@@ -774,27 +774,27 @@ template: |
   
   1;
 ---
-file: "[___ name.replace('::','-') ___]/lib/[___ name.replace('::','-') ___]/Dispatcher.pm"
+file: "[___ name.replace('::','-') ___]/lib/[___ name.replace('::','/') ___]/Dispatcher.pm"
 template: |
-  package [___ name.replace('::','-') ___]::Dispatcher;
+  package [___ name ___]::Dispatcher;
   use Noe::Dispatcher;
   
   connect ''         => { controller => 'Root', action => 'index' };
   
   1;
 ---
-file: "[___ name.replace('::','-') ___]/lib/[___ file ___]"
+file: "[___ name.replace('::','-') ___]/lib/[___ FOREACH p = path  ___][___ p ___]/[___ END ___][___ file ___]"
 template: |
-  package [___ name.replace('::','-') ___];
+  package [___ name ___];
   use base 'Noe';
   1;
 ---
 file: "[___ name.replace('::','-') ___]/[___ USE String(name.replace('::','_')); String.lower ___].psgi"
 template: |-
-  use [___ name.replace('::','-') ___];
+  use [___ name  ___];
   use Plack::Builder;
   
-  my $app = [___ name.replace('::','-') ___]->new();
+  my $app = [___ name ___]->new();
   
   builder {
       enable "Plack::Middleware::Static",
