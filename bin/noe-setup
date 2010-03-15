@@ -2,6 +2,5 @@
 use Noe::Setup;
 use strict;
 
-my $app_name = $ARGV[0];
-my $setup = Noe::Setup->run( $app_name );
-$setup->run;
+my $starter = Noe::Setup->new( module => $ARGV[0] );
+$starter->run;
