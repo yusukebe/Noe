@@ -1,7 +1,6 @@
 package Noe::Component;
 use strict;
 use warnings;
-use URI;
 use YAML ();
 use UNIVERSAL::require;
 
