@@ -200,7 +200,7 @@ Yusuke Wada E<lt>yusuke at kamawada.comE<gt>
 
 =head1 SEE ALSO
 
-Plack/PSGI
+L<Plack/PSGI>
 
 =head1 LICENSE
 
