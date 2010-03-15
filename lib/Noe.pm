@@ -192,7 +192,7 @@ Session is not supported yet.
 The character of my favorite TV animation "true tears".
 She said
 
-  私...涙、あげちゃったから [ I've presented my tears to my lover. ]
+  I've presented my tears to my lover...
 
 =head1 AUTHOR
 
