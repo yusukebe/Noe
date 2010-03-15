@@ -1,48 +1,30 @@
-
-package DevelTestFlavor;
+package Noe::Starter;
+use base 'Module::Packer::Starter';
 use strict;
 use warnings;
-use base 'Module::Setup::Flavor';
+
 1;
+__END__
 
-=head1
+ =head1 SYNOPSIS
 
-DevelTestFlavor - pack from DevelTestFlavor
+   use Noe::Starter::Starter;
+   my $starter = Noe::Starter::Starter->new;
+   $starter->run;
 
-=head1 SYNOPSIS
-
-  DevelTestFlavor-setup --init --flavor-class=+DevelTestFlavor new_flavor
-
-=cut
+ =cut
 
 __DATA__
 
 ---
-file: myapp.yaml
-template: "message: Hello\n"
----
-file: myapp.psgi
-template: |-
-  use MyApp;
-  use Plack::Builder;
-  
-  my $app = MyApp->new();
-  
-  builder {
-      enable "Plack::Middleware::Static",
-        path => qr{^/static},
-        root => './root/';
-      $app->psgi_handler;
-  };
----
-file: tmpl/index.mt
+file: "[___ name.replace('::','-') ___]/tmpl/index.mt"
 template: |-
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
   "http://www.w3.org/TR/html4/strict.dtd">
   <html>
   <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>[% module %] powered by Noe</title>
+  <title>[___ name.replace('::','-') ___] powered by Noe</title>
   <link rel="stylesheet" href="<?= $base ?>static/css/screen.css" type="text/css" media="screen, projection">
   <link rel="stylesheet" href="<?= $base ?>static/css/print.css" type="text/css" media="print">
   <!--[if lt IE 8]><link rel="stylesheet" href="<?= $base ?>static/css/ie.css" type="text/css" media="screen, projection"><![endif]-->
@@ -50,8 +32,8 @@ template: |-
   <body>
   <div class="container">
     <hr class="space" />
-    <h1>[% module %]</h1>
-    <h2>Noe - true tears on WAF</h2>
+    <h1>[___ name.replace('::','-') ___]</h1>
+    <h2>Noe - true tears on web application framework.</h2>
     <h3><?= $message ?></h3>
     <hr />
     <address>Noe is powered by Plack and Blueprint css</address>
@@ -59,7 +41,10 @@ template: |-
   </body>
   </html>
 ---
-file: root/static/css/ie.css
+file: "[___ name.replace('::','-') ___]/[___ USE String(name.replace('::','_')); String.lower ___].yaml"
+template: "message: Hello\n"
+---
+file: "[___ name.replace('::','-') ___]/root/static/css/ie.css"
 template: |-
   /* -----------------------------------------------------------------------
   
@@ -97,7 +82,7 @@ template: |-
   form.inline input.checkbox, form.inline input.radio, form.inline input.button, form.inline button {margin:0.5em 0;}
   button, input.button {position:relative;top:0.25em;}
 ---
-file: root/static/css/print.css
+file: "[___ name.replace('::','-') ___]/root/static/css/print.css"
 template: |-
   /* -----------------------------------------------------------------------
   
@@ -129,7 +114,7 @@ template: |-
   a:link, a:visited {background:transparent;font-weight:700;text-decoration:underline;}
   a:link:after, a:visited:after {content:" (" attr(href) ")";font-size:90%;}
 ---
-file: root/static/css/screen.css
+file: "[___ name.replace('::','-') ___]/root/static/css/screen.css"
 template: |-
   /* -----------------------------------------------------------------------
   
@@ -390,7 +375,7 @@ template: |-
   .clearfix, .container {display:block;}
   .clear {clear:both;}
 ---
-file: root/static/css/LICENSE
+file: "[___ name.replace('::','-') ___]/root/static/css/LICENSE"
 template: |
   Blueprint CSS Framework License
   ----------------------------------------------------------------
@@ -707,24 +692,9 @@ template: |
   PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGES.
 ---
-file: lib/MyApp.pm
+file: "[___ name.replace('::','-') ___]/lib/[___ name.replace('::','-') ___]/Controller/Root.pm"
 template: |
-  package MyApp;
-  use base 'Noe';
-  1;
----
-file: lib/MyApp/Dispatcher.pm
-template: |
-  package MyApp::Dispatcher;
-  use Noe::Dispatcher;
-  
-  connect ''         => { controller => 'Root', action => 'index' };
-  
-  1;
----
-file: lib/MyApp/Controller/Root.pm
-template: |
-  package MyApp::Controller::Root;
+  package [___ name.replace('::','-') ___]::Controller::Root;
   
   sub index {
       my ( $self, $c ) = @_;
@@ -733,51 +703,32 @@ template: |
   
   1;
 ---
-config:
-  class: Noe::Setup::Flavor
-  module_setup_flavor_devel: 1
-  plugins:
-    - Template
-  testdata:
-    dirs:
-      - root
-      - root/static
-      - root/static/css
-      - tmpl
-      - lib
-      - lib/MyApp
-      - lib/MyApp/Controller
-    files:
-      - file: myapp.yaml
-        likes:
-          - message
-      - file: myapp.psgi
-        likes:
-          - MyApp
-          - Plack::Builder
-      - file: root/static/css/screen.css
-        likes:
-          - Blueprint
-      - file: root/static/css/print.css
-        likes:
-          - Blueprint
-      - file: root/static/css/ie.css
-        likes:
-          - Blueprint
-      - file: root/static/css/LICENSE
-        likes:
-          - Blueprint
-      - file: tmpl/index.mt
-        likes:
-          - html
-      - file: lib/MyApp.pm
-        likes:
-          - Noe
-      - file: lib/MyApp/Dispatcher.pm
-        likes:
-          - Noe::Dispatcher
-      - file: lib/MyApp/Controller/Root.pm
-        likes:
-          - Controller::Root
-    module: MyApp
+file: "[___ name.replace('::','-') ___]/lib/[___ name.replace('::','-') ___]/Dispatcher.pm"
+template: |
+  package [___ name.replace('::','-') ___]::Dispatcher;
+  use Noe::Dispatcher;
+  
+  connect ''         => { controller => 'Root', action => 'index' };
+  
+  1;
+---
+file: "[___ name.replace('::','-') ___]/lib/[___ file ___]"
+template: |
+  package [___ name.replace('::','-') ___];
+  use base 'Noe';
+  1;
+---
+file: "[___ name.replace('::','-') ___]/[___ USE String(name.replace('::','_')); String.lower ___].psgi"
+template: |-
+  use [___ name.replace('::','-') ___];
+  use Plack::Builder;
+  
+  my $app = [___ name.replace('::','-') ___]->new();
+  
+  builder {
+      enable "Plack::Middleware::Static",
+        path => qr{^/static},
+        root => './root/';
+      $app->psgi_handler;
+  };
 
