@@ -1,8 +1,8 @@
 package Noe;
 use strict;
-our $VERSION = '0.0';
+our $VERSION = '0.01';
 use URI;
-use Noe::Context;
+use Noe::Component;
 use Plack::Request;
 use UNIVERSAL::require;
 
@@ -25,21 +25,21 @@ sub base_dir {
     return "$path/";
 }
 
+*handler = \&psgi_handler;
+
 sub psgi_handler {
     my $self = shift;
 
     return sub {
         my $env = shift;
-        if( defined $env->{HTTP_X_FORWARDED_HOST} && $env->{HTTP_X_FORWARDED_HOST} != 80 ){
-            $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT};
-        }
+
         my $req  = Plack::Request->new($env);
 
-        my $context = Noe::Context->new(
+        my $c = Noe::Component->new(
             request  => $req,
-            base_dir => $self->base_dir(),
+            base_dir => $self->base_dir,
             app      => $self->{app},
-            base     => $self->base_uri($env),
+            base     => $req->base,
         );
 
         my $app        = $self->{app};
@@ -51,7 +51,7 @@ sub psgi_handler {
         if ($@) { return $self->handle_404 }
         my $method = $rule->{action} or return $self->handle_404;
         my $code;
-        eval { $code = $controller->$method($context, $rule->{args}) };
+        eval { $code = $controller->$method($c, $rule->{args}) };
         if( $code ){
             return $code;
         }else{
@@ -59,18 +59,6 @@ sub psgi_handler {
             return $self->handle_500;
         }
     }
-}
-
-sub base_uri {
-    my ( $self, $env ) = @_;
-    my $base_path;
-    $base_path = $env->{SCRIPT_NAME} || '/';
-    my $base = URI->new;
-    $base->scheme( $env->{'psgi.url_scheme'} );
-    $base->host($env->{HTTP_HOST} || $env->{SERVER_NAME});
-    $base->port($env->{SERVER_PORT});
-    $base->path($base_path);
-    return $base;
 }
 
 sub handle_404 {
@@ -95,19 +83,21 @@ __END__
 
 =head1 NAME
 
-Noe - Isurugi Noe in true tears.
+Noe - true tears on web application framework.
 
 =head1 SYNOPSIS
 
-  # MyApp.pm
+in MyApp.pm
+
   package MyApp;
   use base 'Noe';
   1;
 
-  # myapp.psgi
+in myapp.psgi
+
   use MyApp;
   my $app = MyApp->new();
-  $app->psgi_handler;
+  $app->handler;
 
 =head1 DESCRIPTION
 

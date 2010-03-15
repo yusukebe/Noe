@@ -1,8 +1,8 @@
-package Noe::Context;
+package Noe::Component;
 use strict;
 use warnings;
 use URI;
-use YAML::XS;
+use YAML ();
 use UNIVERSAL::require;
 
 sub new {
@@ -28,7 +28,7 @@ sub config {
     if( defined $self->{config} ){
         return $self->{config};
     }else{
-        my $ref = YAML::XS::LoadFile( $self->base_dir . ( lc( $self->{app} ) . '.yaml' ) );
+        my $ref = YAML::LoadFile( $self->base_dir . ( lc( $self->{app} ) . '.yaml' ) );
         $self->{config} = $ref;
         return $ref;
     }
@@ -47,7 +47,7 @@ sub render {
     }
     else {
         $file = $tmpl;
-	$class = "Noe::View::TMT";
+        $class = "Noe::View::TMT";
     }
 
     $class->require or die "Can't find viwe class: $@";
