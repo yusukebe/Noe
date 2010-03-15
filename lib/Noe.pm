@@ -1,7 +1,6 @@
 package Noe;
 use strict;
 our $VERSION = '0.01';
-use URI;
 use Noe::Component;
 use Plack::Request;
 use UNIVERSAL::require;
@@ -102,6 +101,30 @@ in myapp.psgi
 =head1 DESCRIPTION
 
 Noe is Minimal Web Application Framework based on Plack/PSGI.
+
+=head2 HOW TO START
+
+Run setup command with your module name.
+
+  $ noe-setup MyApp::Web
+
+Generated files.
+
+  $ noe-setup MyApp::Web
+  Writing ./MyApp-Web/tmpl/index.mt
+  Writing ./MyApp-Web/myapp_web.yaml
+  Writing ./MyApp-Web/root/static/css/ie.css
+  Writing ./MyApp-Web/root/static/css/print.css
+  Writing ./MyApp-Web/root/static/css/screen.css
+  Writing ./MyApp-Web/root/static/css/LICENSE
+  Writing ./MyApp-Web/lib/MyApp/Web/Controller/Root.pm
+  Writing ./MyApp-Web/lib/MyApp/Web/Dispatcher.pm
+  Writing ./MyApp-Web/lib/MyApp/Web.pm
+  Writing ./MyApp-Web/myapp_web.psgi
+
+Then run with plackup
+
+  $ plackup myapp_web.psgi
 
 =head1 AUTHOR
 
