@@ -1,4 +1,8 @@
 package TestApp::Dispatcher;
-use HTTPx::Dispatcher;
-connect '' => {controller => 'Root', action => 'root'};
+use Noe::Dispatcher;
+
+connect '' => { controller => 'Root', action => 'index' };
+get '/comment' => { controller => 'Comment', action => 'show' };
+post '/comment' => { controller => 'Comment', action => 'post' };
+
 1;

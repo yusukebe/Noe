@@ -8,7 +8,7 @@ requires 'Template';
 requires 'IO::File';
 requires 'Path::Class';
 requires 'YAML';
-requires 'HTTPx::Dispatcher';
+requires 'HTTPx::Dispatcher' => 0.07;
 requires 'Text::MicroTemplate::Extended';
 
 recommends 'JSON::XS';
