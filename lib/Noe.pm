@@ -135,9 +135,11 @@ Noe::Dispatcher is HTTPx::Dispatcher based. Write rules on your dispatcher class
   package MyApp::Web::Dispatcher;
   use Noe::Dispatcher;
 
-  connect ''         => { controller => 'Root', action => 'index' };
-  connect 'hi'       => { controller => 'Root', action => 'hi' };
-  connect 'json'     => { controller => 'JSON', action => 'index' };
+  connect ''          => { controller => 'Root',    action => 'index' };
+  connect '/hi'       => { controller => 'Root',    action => 'hi' };
+  connect '/json'     => { controller => 'JSON',    action => 'index' };
+  get '/comment/:id'  => { controller => 'Comment', action => 'show' };
+  post '/comment/:id' => { controller => 'Comment', action => 'post' };
 
   1;
 
