@@ -1,6 +1,0 @@
-#!/usr/bin/perl
-use Noe::Setup;
-use strict;
-
-my $starter = Noe::Setup->new( module => $ARGV[0] );
-$starter->run;
