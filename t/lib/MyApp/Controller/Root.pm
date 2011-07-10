@@ -1,8 +1,9 @@
 package MyApp::Controller::Root;
+use base 'Noe::Controller';
 
 sub index {
     my $self = shift;
-    render( 'index', { message => $c->config->{message} } );
+    $self->render('index');
 }
 
 1;

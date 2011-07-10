@@ -1,4 +1,8 @@
 use strict;
-use Test::More tests => 1;
+use Test::More;
 
-BEGIN { use_ok 'Noe' }
+BEGIN { use_ok 'Noe';
+        use_ok 'Noe::Util';
+    }
+
+done_testing;
