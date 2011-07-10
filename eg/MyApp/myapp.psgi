@@ -1,15 +1,5 @@
 use lib qw( ../../lib ./lib );
-use MyApp;
-use Plack::Builder;
+use MyApp::Web;
 
-my $app = MyApp->new();
-
-builder {
-    enable "Plack::Middleware::Static",
-      path => qr{\.(?:png|jpg|gif|css|txt|js)$},
-      root => 'root/';
-    $app->psgi_handler;
-};
-
-__END__
-
+my $web = MyApp::Web->new();
+$web->app;
